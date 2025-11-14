@@ -21,6 +21,44 @@ UP_ALEXNET/
 │   └── train.py
 ```
 
+## Running on Google Colab
+
+To run this project on Google Colab without any local setup (Use GPU):
+
+1. Open [Google Colab](https://colab.research.google.com/)
+2. Create a new notebook or upload an existing one
+3. In a cell, run the following commands to set up the project:
+
+
+```python
+!git clone https://github.com/arvnoodle/UP_ALEXNET.git
+cd UP_ALEXNET/
+!pip install -r requirements.txt
+!python src/train.py --config config_utils/config.yaml
+```
+
+4. To run inference on a single image after training (or using a pre-trained model):
+
+
+```python
+!python src/inference.py --checkpoint alexnet_data_out/models/alexnet_final.pkl --image path/to/your/image.jpg
+```
+
+5. To run inference on a directory of images:
+
+
+```python
+!python src/inference.py --checkpoint alexnet_data_out/models/alexnet_final.pkl --image-dir path/to/your/images/
+```
+
+6. To monitor training with TensorBoard in Colab:
+
+
+```python
+%load_ext tensorboard
+%tensorboard --logdir alexnet_data_out/tblogs
+```
+
 ## Virtual Environment Setup
 
 ### Windows
