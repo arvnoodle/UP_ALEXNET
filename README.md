@@ -21,7 +21,27 @@ UP_ALEXNET/
 │   └── train.py
 ```
 
+## Virtual Environment Setup
+
+### Windows
+
+```cmd
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+### Linux
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
 ## Installation
+
+After activating your virtual environment, install the required packages:
 
 ```bash
 pip install -r requirements.txt
@@ -29,7 +49,13 @@ pip install -r requirements.txt
 
 ## Training
 
-To train the model:
+To train the model (the config path is set by default):
+
+```bash
+python src/train.py
+```
+
+Or explicitly specify the config path:
 
 ```bash
 python src/train.py --config config_utils/config.yaml
@@ -43,22 +69,47 @@ python src/train.py --config config_utils/config.yaml --resume path/to/checkpoin
 
 ## Inference
 
-To run inference on a single image:
+To run inference on a single image (default config is config_utils/config.yaml):
 
 ```bash
 python src/inference.py --checkpoint path/to/checkpoint.pkl --image path/to/image.jpg
 ```
 
-To run inference on a directory of images:
+For example, if you have a dog image in a sample_images directory (default config is used):
+
+```bash
+python src/inference.py --checkpoint alexnet_data_out/models/alexnet_final.pkl --image sample_images/my_dog.jpg
+```
+
+To run inference on a directory of images (e.g., 10 dog images) (default config is used):
 
 ```bash
 python src/inference.py --checkpoint path/to/checkpoint.pkl --image-dir path/to/images/
 ```
 
-To show all class probabilities:
+To show all class probabilities (default config is used):
 
 ```bash
 python src/inference.py --checkpoint path/to/checkpoint.pkl --image path/to/image.jpg --show-all-probs
+```
+
+## Monitoring Training with TensorBoard
+
+To monitor training progress with TensorBoard:
+
+```bash
+tensorboard --logdir alexnet_data_out/tblogs
+```
+
+For remote i.e Runpod
+
+```bash
+tensorboard --logdir alexnet_data_out/tblogs --host 0.0.0.0 --port 6006
+```
+
+Then access TensorBoard from your local browser at:
+```
+http://[ADDRESS]:6006
 ```
 
 ## Configuration

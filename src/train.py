@@ -13,7 +13,11 @@ from tensorboardX import SummaryWriter
 
 from model import AlexNet
 from data_loader import get_data_loaders
-from config_utils import (
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+from config_utils.utils import (
     load_config, setup_device, create_directories, 
     save_checkpoint, load_checkpoint, calculate_accuracy, 
     set_seed, get_model_summary
@@ -180,7 +184,7 @@ def train_model(config, resume_checkpoint=None):
 def main():
     """Main function with CLI interface."""
     parser = argparse.ArgumentParser(description='Train AlexNet on CIFAR-10')
-    parser.add_argument('--config', type=str, default='config.yaml', 
+    parser.add_argument('--config', type=str, default='config_utils/config.yaml', 
                        help='Path to configuration file')
     parser.add_argument('--resume', type=str, default=None,
                        help='Path to checkpoint to resume from')

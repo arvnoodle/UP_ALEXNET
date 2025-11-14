@@ -12,7 +12,12 @@ from PIL import Image
 import torchvision.transforms as transforms
 
 from model import AlexNet
-from config_utils import load_config, setup_device, get_class_names
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+from config_utils.utils import load_config, setup_device
+from data_loader import get_class_names
 
 
 def load_model(checkpoint_path, config, device):
@@ -185,7 +190,7 @@ def main():
                        help='Path to single image file')
     parser.add_argument('--image-dir', type=str, default=None,
                        help='Path to directory containing images')
-    parser.add_argument('--config', type=str, default='config.yaml',
+    parser.add_argument('--config', type=str, default='config_utils/config.yaml',
                        help='Path to configuration file')
     parser.add_argument('--show-all-probs', action='store_true',
                        help='Show probabilities for all classes')
