@@ -2,12 +2,14 @@
 Data Loading and Preprocessing
 Extracted from the original alexnetv3.py by JM
 Modular, configurable data pipeline for production use
+Modified for Anime Classification (3D, 90s, Modern)
 """
 
 import torch
 import torchvision.transforms as transforms
-from torchvision.datasets import CIFAR10
+from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader
+import os
 
 
 def get_data_loaders(config):
@@ -33,7 +35,7 @@ def get_data_loaders(config):
     
     # Define transformation and augmentation for training
     train_transform = transforms.Compose([
-        transforms.Resize((image_dim, image_dim)),  # to resize CIFAR-10 images and retain the AlexNet architecture as is
+        transforms.Resize((image_dim, image_dim)),  # resize anime images for AlexNet architecture
         transforms.RandomHorizontalFlip(),  # data augmentation for training data
         transforms.ToTensor(),  # Convert images to PyTorch tensors
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),  # Normalize
@@ -41,14 +43,22 @@ def get_data_loaders(config):
 
     # Define transformation for testing (no augmentation)
     test_transform = transforms.Compose([
-        transforms.Resize((image_dim, image_dim)),  # to resize CIFAR-10 images and retain the AlexNet architecture as is
+        transforms.Resize((image_dim, image_dim)),  # resize anime images for AlexNet architecture
         transforms.ToTensor(),  # Convert images to PyTorch tensors
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),  # Normalize
     ])
 
-    # Load the CIFAR-10 dataset
-    train_dataset = CIFAR10(root=data_dir, train=True, transform=train_transform, download=True)
-    test_dataset = CIFAR10(root=data_dir, train=False, transform=test_transform, download=True)
+    # Load the anime dataset using ImageFolder
+    train_dir = os.path.join(data_dir, 'train')
+    test_dir = os.path.join(data_dir, 'test')
+    
+    # Check if test directory exists, if not, use train for both (for small dataset testing)
+    if not os.path.exists(test_dir):
+        print("Warning: Test directory not found. Using training data for validation.")
+        test_dir = train_dir
+    
+    train_dataset = ImageFolder(root=train_dir, transform=train_transform)
+    test_dataset = ImageFolder(root=test_dir, transform=test_transform)
     
     print('Datasets created')
     print(f'Training samples: {len(train_dataset)}')
@@ -80,12 +90,11 @@ def get_data_loaders(config):
 
 def get_class_names():
     """
-    Get CIFAR-10 class names.
+    Get anime classification class names.
     
     Returns:
-        list: List of class names
+        list: List of class names for anime classification
     """
     return [
-        'airplane', 'automobile', 'bird', 'cat', 'deer',
-        'dog', 'frog', 'horse', 'ship', 'truck'
+        '3d_anime', '90s_anime', 'modern_anime'
     ]

@@ -57,6 +57,8 @@ class AlexNet(nn.Module):
             nn.MaxPool2d(kernel_size=3, stride=2),  # (b x 256 x 6 x 6)
         )
 
+        self.adaptive_pool = nn.AdaptiveAvgPool2d((6, 6))
+        
         # Classifier (Fully Connected Layers)
         self.classifier = nn.Sequential(
             nn.Dropout(p=0.5),
@@ -93,5 +95,6 @@ class AlexNet(nn.Module):
             output (Tensor): output tensor
         """
         x = self.features(x)
+        x = self.adaptive_pool(x) 
         x = x.view(-1, 256 * 6 * 6)  # reduce the dimensions for linear layer input.
         return self.classifier(x)
