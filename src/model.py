@@ -34,13 +34,13 @@ class AlexNet(nn.Module):
             # Convolutional layer 1
             nn.Conv2d(in_channels=3, out_channels=96, kernel_size=11, stride=4),     # (b x 96 x 55 x 55)
             nn.ReLU(),
-            nn.LocalResponseNorm(size=5, alpha=0.0001, beta=0.75, k=2),  # Can be replaced with nn.BatchNorm2d(96) if any error encountered
+            nn.BatchNorm2d(96),  
             nn.MaxPool2d(kernel_size=3, stride=2),  # (b x 96 x 27 x 27)
             
             # Convolutional layer 2
             nn.Conv2d(in_channels=96, out_channels=256, kernel_size=5, padding=2),   # (b x 256 x 27 x 27)
             nn.ReLU(),
-            nn.LocalResponseNorm(size=5, alpha=0.0001, beta=0.75, k=2),  # Can be replaced with nn.BatchNorm2d(256) if any error encountered
+            nn.BatchNorm2d(256),  
             nn.MaxPool2d(kernel_size=3, stride=2),  # (b x 256 x 13 x 13)
             
             # Convolutional layer 3
