@@ -50,7 +50,9 @@ def train_model(config, resume_checkpoint=None):
         print(f"Using DataParallel with GPUs: {device_ids}")
     
     # Print model summary
-    get_model_summary(model)
+    image_dim = config['model']['image_dim']
+    input_size = (1, 3, image_dim, image_dim)
+    get_model_summary(model, input_size)
     
     # Loss function and optimizer
     criterion = nn.CrossEntropyLoss()

@@ -150,7 +150,7 @@ def set_seed(seed):
     print(f"Random seed set to: {seed}")
 
 
-def get_model_summary(model, input_size=(1, 3, 227, 227)):
+def get_model_summary(model, input_size):
     """
     Print model summary.
     
