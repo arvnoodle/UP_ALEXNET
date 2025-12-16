@@ -9,19 +9,19 @@ import argparse
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from tensorboardX import SummaryWriter
+from torch.utils.tensorboard import SummaryWriter
 
-from model import AlexNet
-from data_loader import get_data_loaders
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-
-from config_utils.utils import (
+from src.model import AlexNet
+from src.data_loader import get_data_loaders
+from src.conformal import ConformalPredictor
+from config_utils import  (
     load_config, setup_device, create_directories, 
     save_checkpoint, load_checkpoint, calculate_accuracy, 
     set_seed, get_model_summary
 )
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 
 def train_model(config, resume_checkpoint=None):
@@ -38,7 +38,7 @@ def train_model(config, resume_checkpoint=None):
     create_directories(config)
     
     # Get data loaders
-    train_loader, test_loader = get_data_loaders(config)
+    train_loader, calib_loader, test_loader = get_data_loaders(config)
     
     # Create model
     model = AlexNet(num_classes=config['model']['num_classes']).to(device)
@@ -182,16 +182,35 @@ def train_model(config, resume_checkpoint=None):
     writer.close()
     print("Training completed!")
 
+    # --- Conformal calibration  ---
+    calib_model = model.module if isinstance(model, torch.nn.DataParallel) else model
+    cp = ConformalPredictor(alpha=0.1, device=device)
+    qhat = cp.calibrate(model, calib_loader)
+
+    conformal_path = os.path.join(checkpoint_dir, "conformal.pt")
+    torch.save({"qhat": qhat, "alpha": cp.alpha}, conformal_path)
+    print(f"✅ Saved conformal threshold to {conformal_path} (qhat={qhat:.4f})")
+
+
 
 def main():
     """Main function with CLI interface."""
-    parser = argparse.ArgumentParser(description='Train AlexNet on CIFAR-10')
+    parser = argparse.ArgumentParser(description='Train AlexNet on Anime Dataset')
     parser.add_argument('--config', type=str, default='config_utils/config.yaml', 
                        help='Path to configuration file')
     parser.add_argument('--resume', type=str, default=None,
                        help='Path to checkpoint to resume from')
+    #remove after
+    parser.add_argument("--dry-run", action="store_true", help="Validate training setup only")
+
     
     args = parser.parse_args()
+    #remove after
+    if args.dry_run:
+        print("🧪 DRY RUN MODE (train)")
+        print("✓ Argument parsing works")
+        print("✓ Train module imports correctly")
+        return
     
     # Load configuration
     try:
@@ -203,7 +222,6 @@ def main():
     
     # Start training
     train_model(config, args.resume)
-
 
 if __name__ == '__main__':
     main()

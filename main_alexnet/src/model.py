@@ -98,3 +98,10 @@ class AlexNet(nn.Module):
         x = self.adaptive_pool(x) 
         x = x.view(-1, 256 * 6 * 6)  # reduce the dimensions for linear layer input.
         return self.classifier(x)
+
+# test
+if __name__ == "__main__":
+    model = AlexNet(num_classes=10)
+    x = torch.randn(2, 3, 227, 227)
+    y = model(x)
+    print("Output shape:", y.shape)
