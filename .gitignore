@@ -1,0 +1,5 @@
+/venv
+/data
+/src/__pycache__
+/alexnet_data_out
+/config_utils/__pycache__

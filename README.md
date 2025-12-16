@@ -165,10 +165,25 @@ The configuration is stored in `config_utils/config.yaml` and includes:
 The AlexNet implementation includes:
 - 5 convolutional layers with pooling
 - 3 fully connected layers with dropout
-- Local response normalization
+- **BatchNorm2d** replacing LocalResponseNorm for improved training stability
+- **Adaptive pooling** to support flexible input resolutions
 
-## CIFAR-10 Classes
+## Anime Dataset
 
-The model classifies images into 10 categories:
-- airplane, automobile, bird, cat, deer
-- dog, frog, horse, ship, truck
+This implementation has been adapted for anime style classification.
+
+### Dataset Structure
+The model classifies anime into 3 categories:
+- **3D anime** (modern CGI/3D animation)
+- **90s anime** (classic 90s animation style)  
+- **modern anime** (contemporary 2D animation)
+
+### Download Dataset
+
+**Training Dataset** (organized in train/3d, train/90s, train/modern folders):
+- [Download Training Data](https://drive.google.com/file/d/1Ig13vLTCmO4stzLcLR5FbC75v1MvUh3Y/view?usp=sharing)
+
+**Batch Inference Dataset** (mixed images for testing):
+- [Download Inference Data](https://drive.google.com/file/d/1l3uUvK1AKEoptMlMd4s5e9E0MRoNkDj2/view?usp=sharing)
+
+Extract the training dataset to `./data/` directory before training.
