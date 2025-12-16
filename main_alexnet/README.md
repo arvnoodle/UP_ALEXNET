@@ -207,7 +207,7 @@ The model classifies anime into 3 categories:
 
 Extract the training dataset to `./data/` directory before training.
 
-### Result
+### Results
 
 #### Test Accuracy and Convergence Behavior
 
